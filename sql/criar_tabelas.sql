@@ -15,10 +15,10 @@ CREATE TABLE Clientes (
 CREATE TABLE Produtos (
     id INT PRIMARY KEY IDENTITY,
     nome VARCHAR(100),
-    categoria VARCHAR(50),         -- Ex: "roupa", "skate", "acessorio"
-    categoria_classe VARCHAR(100), -- Ex: "skate(peças)", "acessorios_tabacaria"
+    categoria VARCHAR(50),        
+    categoria_classe varchar(100), 
     preco DECIMAL(10,2),
-    estoque INT
+    EstoqueAtual int not null check (EstoqueAtual >= 0)
 );
 
 
