@@ -11,17 +11,6 @@ https://github.com/BrunoKTI
   - Criação de tabelas para produtos, clientes e vendas.  
   - Procedures para registrar clientes e vendas.  
   - Trigger para atualização automática de estoque após cada venda.  
-
-- **Versionamento com Git/GitHub**  
-  - Repositório organizado para estudo e portfólio profissional.  
-
----
-
-## 📌 Próximos Passos  
-- Criar **transações fictícias** para gerar dados reais de negócio.  
-- Tratar os dados com **Python (Pandas/SQLAlchemy)**.  
-- Produzir **dashboards no Power BI** para análise de despesas, lucros e comportamento de clientes.  
-
 ---
 
 ## 🎯 Objetivo  
