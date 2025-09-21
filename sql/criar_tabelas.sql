@@ -3,15 +3,6 @@ use kaya_drop;
 go
 
 
-CREATE TABLE Clientes (
-    id INT PRIMARY KEY IDENTITY,
-    nome VARCHAR(100),
-    email VARCHAR(100),
-    estilo_preferido VARCHAR(50),
-    cidade VARCHAR(50),
-    data_cadastro DATE
-);
-
 CREATE TABLE Produtos (
     id INT PRIMARY KEY IDENTITY,
     nome VARCHAR(100),
@@ -20,7 +11,6 @@ CREATE TABLE Produtos (
     preco DECIMAL(10,2),
     EstoqueAtual int not null check (EstoqueAtual >= 0)
 );
-
 
 CREATE TABLE Vendas (
     id INT PRIMARY KEY IDENTITY,
