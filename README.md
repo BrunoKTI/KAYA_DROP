@@ -1,77 +1,114 @@
 
 
-📊 Projeto KayaDrop
+📊 Projeto KAYA_DROP
 
-KayaDrop é um sistema fictício de gestão de vendas inspirado em um e-commerce de estilo de vida urbano.
-O objetivo é aplicar conceitos de Administração de Banco de Dados, SQL Server e Python, dentro da metodologia CRISP-DM, simulando um fluxo real de negócios — da transação no banco até a análise e geração de insights no Power BI.
+Sistema fictício de loja online, desenvolvido como projeto de portfólio, para praticar SQL Server, Python e Power BI aplicados a um fluxo de dados realista.
 
-🔗 Acesse o repositório no GitHub
+O objetivo é simular operações de um e-commerce e aplicar boas práticas em modelagem de dados, queries, procedures, triggers e análise de dados.
 
-🎯 Objetivo do Projeto
+📂 Estrutura do Projeto
+KAYADROP/
+│
+├── sql/            # scripts SQL (tabelas, procedures, triggers)
+│   ├── tabelas.sql
+│   ├── procedures.sql
+│   ├── triggers.sql
+│
+├── python/         # scripts Python para simulação de transações e ETL
+├── querys/         # consultas SQL utilizadas em relatórios e análises
+├── dashboard/      # arquivos do Power BI
+├── data/           # arquivos de dados exportados e tratados
+└── README.md
 
-Consolidar habilidades práticas em administração e gerenciamento de bancos de dados, incluindo:
+🗄️ Modelagem de Dados
 
-Criação e manutenção de tabelas relacionais.
+O banco de dados é composto pelas principais tabelas:
 
-Implementação de procedures, triggers e views para automatização de rotinas.
+clientes → informações dos clientes cadastrados.
 
-Validação de dados para garantir integridade e consistência.
+produtos → catálogo da loja, com controle de estoque.
 
-Simulação de processos de backup e restore.
+vendas → registros das vendas realizadas.
 
-Integração de dados via Python para automação de tarefas e tratamento de informações.
+itensvenda → detalhamento dos produtos em cada venda.
 
-Geração de relatórios analíticos no Power BI.
+⚙️ Procedures
 
-⚙️ Funcionalidades do Projeto
-Banco de Dados Relacional (SQL Server)
+Foram criadas procedures para automatizar operações comuns, como:
 
-Modelagem de entidades (Produtos, Clientes, Vendas).
+Inserção de clientes.
 
-Procedures para registrar clientes e vendas.
+Registro de novas vendas.
 
-Triggers para atualização automática de estoque.
+Atualização de estoque.
 
-Validações de tipos de dados para evitar inconsistências.
+Essas procedures centralizam a lógica e garantem consistência no banco.
 
-Estruturação de processos de backup, restore e controle de permissões.
+🛡️ Trigger de Controle de Estoque
 
-Python e Automação
+Foi criada a trigger trg_bloqueia_venda_sem_estoque para impedir vendas sem produto em estoque.
 
-Scripts para integração e tratamento de dados.
+🔎 Como funciona
 
-Consumo de APIs REST para simulação de dados externos.
+Executada no momento da tentativa de inserir itens em uma venda.
 
-Preparação de datasets para análise.
+Se o estoque for menor que a quantidade pedida → a venda é bloqueada.
 
-Power BI
+Caso contrário:
 
-Dashboards com métricas de vendas e comportamento de clientes.
+O item da venda é inserido.
 
-KPIs para apoio à tomada de decisão.
+O estoque do produto é atualizado automaticamente.
 
-🛠️ Tecnologias Utilizadas
+📝 Script
+create trigger trg_bloqueia_venda_sem_estoque
+on itensvenda
+instead of insert
+as
+begin
+    set nocount on;
 
-SQL Server (Banco de Dados Relacional)
+    if exists (
+        select 1
+        from inserted i
+        join produtos p on p.id_produto = i.produto_id
+        where p.estoque < i.quantidade
+    )
+    begin
+        raiserror('venda bloqueada: produto sem estoque suficiente!', 16, 1);
+        rollback transaction;
+        return;
+    end
 
-Python (Automação e ETL)
+    insert into itensvenda (venda_id, produto_id, quantidade, preco_unitario)
+    select i.venda_id, i.produto_id, i.quantidade, i.preco_unitario
+    from inserted i;
 
-Power BI (Visualização de Dados)
+    update p
+    set p.estoque = p.estoque - i.quantidade
+    from produtos p
+    join inserted i on p.id_produto = i.produto_id;
+end;
+go
 
-Git/GitHub (Controle de Versão e Portfólio)
+📊 Análises e Dashboard
 
-🚀 Próximos Passos
+Os dados tratados são exportados e consumidos no Power BI, permitindo criar relatórios sobre:
 
-Implementar rotinas de auditoria para monitorar alterações em dados críticos.
+Produtos mais vendidos.
 
-Configurar backup automático em nuvem.
+Clientes mais ativos.
 
-Adicionar consultas otimizadas para análise de performance (Índices e Execution Plans).
+Estoque disponível.
 
-Expandir os dashboards do Power BI com análises preditivas.
+Faturamento acumulado.
 
-👨‍💻 Autor
+🚀 Tecnologias Utilizadas
 
-Desenvolvido por BrunoKTI
-, com foco em Administração de Bancos de Dados (DBA) e aplicações práticas de SQL Server, Python
+SQL Server → modelagem, procedures, triggers e queries.
 
+Python → geração de dados fictícios e ETL.
+
+Power BI → visualização e análise de dados.
+
+Git/GitHub → versionamento e portfólio.
