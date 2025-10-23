@@ -1,0 +1,18 @@
+
+--- trigger para inserir automaticamente os campos para iten venda após efetuar venda no carrinho.
+
+create trigger TG_vendaGo
+on venda
+after insert
+as
+begin
+    set nocount on;
+
+    insert into itensVenda (id_venda, id_produto, quantidade, precoUnitario, subtotal)
+    select i.id_venda, c.id_produto, c.quantidade, c.precoUnitario, c.quantidade * c.precoUnitario
+    from inserted i
+    inner join itensVenda c on c.id_itensVenda = i.id_cliente;
+
+    print 'Itens da venda inseridos com sucesso!';
+end;
+go

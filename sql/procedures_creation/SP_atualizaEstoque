@@ -1,0 +1,15 @@
+/*procedure atualiza estoque*/ --Atualiza manualmente o estoque de um produto
+
+create procedure SPatualizaEstoque(
+	@nomeProduto varchar(100),
+	@preco decimal(10,2),
+	@qtd_estoque int
+)
+as 
+	set nocount on;
+
+begin 
+insert into produto(nomeProduto,preco, qtd_estoque)
+values (@nomeProduto, @preco, @qtd_estoque)
+end 
+go

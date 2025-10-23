@@ -1,0 +1,30 @@
+
+--- trigger para decrementa o estoque em caso de venda, e bloqueia em caso de estoque com saldo negativo.
+
+create trigger TG_decrementoEstoque
+on itensVenda
+after insert
+as
+if
+exists (
+    SELECT 1
+    FROM Produto p
+    INNER JOIN inserted i ON p.id_produto = i.id_produto
+    WHERE p.qtd_estoque - i.quantidade < 0
+)
+
+    BEGIN
+        RAISERROR('Estoque insuficiente para realizar a venda.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+begin
+    set nocount on;
+	update p
+	set p.qtd_estoque = p.qtd_estoque - i.quantidade
+	from produto p
+	inner join inserted i on p.id_produto = i.id_produto
+end
+go
+
